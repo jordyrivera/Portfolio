@@ -7,7 +7,6 @@ from flask_session import Session
 
 
 app = Flask(__name__)
-post_id = 0
 
 #SESSION
 app.config.from_object(__name__)
