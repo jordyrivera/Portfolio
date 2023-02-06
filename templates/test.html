@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>test</title>
+</head>
+<body>
+    {% for post in all_post%}
+        {{post.id}},{{post.owner_name}}<br>
+        {% if post.id in m %}
+        you liked this post<br>
+        {%else%}
+        you should like this post<br>
+        {% endif %}
+        {{post.post_content}}<br>
+    <br>
+    {%endfor%}
+</body>
+</html>

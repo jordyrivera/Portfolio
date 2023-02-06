@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+        rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/logo.png">
+</head>
+<body class="hp">
+    <div class="menu-container">
+    <div class="menu-item ">{{ session.name }}</div>
+    <div class="menu-item "><a href="{{ url_for('logout')}} " class="abtns"> Logout</a> </div>
+        <div class="menu-item">
+        <form method="post" action="{{ url_for('search') }}">
+            <input type="text" name="search" placeholder="Search" class="w-90 search-input" autocomplete="off" id="user_search">
+            <input type="image" src="static/search.svg">
+        </form>
+    </div>
+    </div>
+    <div class="new-post">
+    <form method="post" action="{{ url_for('new_post') }}">
+        <input type="text" name="new_post" placeholder="New post here" class="new-input" autocomplete="off" autofocus>
+        <input type="submit" value="Post" class="post-btn">
+    </form>
+    </div>
+    <div class="page-content">
+        {% for post in all_post %}
+        <div class="post-container">
+            <img src="static/logo.png" class="post-img">
+            @{{ post.owner_name }}
+            <p class="post-content"> {{ post.post_content}}</p>
+            <div class="post-options">
+                <div style="align-items:center;">
+                    <form action="{{ url_for('add_comment')}}" method="post">
+            <input type="hidden"  name="post-id" value="{{post.id}}">
+            <input type="text" placeholder="comment here" name="comment" class="comment-post" autocomplete="off">
+            <input type="image" src="/static/plus-circle.svg" class="add-comment">
+            </form>
+                </div>
+                <div>
+                    {%if post.id in l_like%}
+            <a href="{{ url_for('like_post', id= post.id) }}" class="like-post-btn"><img src="/static/hand-thumbs-up-fill.svg" alt="like"></a><b class="like-count">{{ post.likes }}</b>
+            {% else%}
+            <a href="{{ url_for('like_post', id= post.id) }}" class="like-post-btn"><img src="/static/hand-thumbs-up.svg" alt="like"></a><b class="like-count">{{ post.likes }}</b>
+            {% endif %}
+            <a href="{{ url_for('view_comments', id = post.id)}}"> <img src="/static/chat-left-dots.svg" alt="view comments"></a>
+            {% if post.owner_name == session.name %}
+            <a href="{{ url_for('delete_post', id = post.id) }}"><img src="/static/trash-fill.svg" class="delete-post"></a>
+            {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+    </div>
+</body>
+<script>
+  $( function() {
+    var availableTags = [
+        {% for user in users %}
+            "{{user}}",
+        {% endfor %}
+    ];
+    $( "#user_search" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
+</html>
+
