@@ -18,7 +18,7 @@
         </div>
         {% for comment in comments%}
     <div class="comments">
-        {{comment.commented_by}}<br>
+        @{{comment.commented_by}}<br>
          <em style="border-top: 1px solid;">{{ comment.comment}}</em>
     </div>
     {% endfor %}

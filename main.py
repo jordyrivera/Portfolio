@@ -2,11 +2,13 @@ import werkzeug.security
 from flask import Flask, render_template, redirect, url_for, request, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
+import re
 
 from flask_session import Session
 
 
 app = Flask(__name__)
+post_id = 0
 
 #SESSION
 app.config.from_object(__name__)
@@ -73,7 +75,16 @@ def create_user():
         new_username = request.form["Username"]
         dbuser = db.session.execute(db.select(User).filter_by(username=new_username)).scalar()
         password = request.form["Password"]
+        email = request.form["Email"]
         hash = werkzeug.security.generate_password_hash(password,method='pbkdf2:sha256', salt_length=8)
+        if request.form["Name"] == "" or request.form["LastName"] == "" or request.form["Username"] == "" or request.form["Email"] == "":
+            return render_template("register.html", msg="All the fields are required, please fill all of them")
+        # validate email
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+        if (re.fullmatch(regex, email)):
+            pass
+        else:
+            return render_template("register.html", msg="The email you have provided is not a valid email")
         try:
             if new_username == dbuser.username:
                 return render_template("register.html", msg="Username is already taken. Please use another username.")
@@ -81,13 +92,13 @@ def create_user():
             user = User(
                 name= request.form["Name"],
                 lastName= request.form["LastName"],
-                username= request.form["Username"],
-                email= request.form["Email"],
+                username= new_username,
+                email=email,
                 password= hash
             )
             db.session.add(user)
             db.session.commit()
-        return redirect(url_for("home"))
+        return redirect("/")
     return render_template("register.html")
 
 @app.route("/", methods=["GET","POST"])

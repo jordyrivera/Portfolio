@@ -209,6 +209,8 @@
     border: 1px solid var(--dark-color);
     padding:10px;
     border-radius:10px;
+    color: var(--bright-color);
+    margin:5px;
 }
 .post-border{
     border: 1px solid var(--dark-color);
