@@ -164,13 +164,13 @@ def like_post(id):
         db.session.add(new_like)
         db.session.commit()
         print("liked added")
-        return redirect("/")
+        return "", 204
     else:
         db.session.delete(check_db)
         get_post.likes -= 1
         db.session.commit()
         print("like removed")
-        return redirect("/")
+        return "", 204
 
 @app.route("/add_comment", methods=["GET", "POST"])
 def add_comment():
@@ -184,7 +184,7 @@ def add_comment():
         )
         db.session.add(new_comment)
         db.session.commit()
-    return redirect("/")
+    return "", 204
 
 @app.route("/view_comment/<int:id>")
 def view_comments(id):
@@ -200,10 +200,14 @@ def logout():
 
 @app.route("/test")
 def test():
-    all_post = db.session.execute(db.select(Post)).scalars()
-    your_likes = db.session.execute(db.select(Likes).filter_by(post_liker=session["name"])).scalars()
-    m = [like.post_id for like in your_likes]
-    return render_template("test.html", all_post=all_post, your_likes=your_likes, m=m)
+    users_db = db.session.execute(db.select(User)).scalars()
+    users = []
+    for user in users_db:
+        users.append(user.username)
+    all_post = db.session.execute(db.select(Post).order_by(desc(Post.id))).scalars()
+    likes = db.session.execute(db.select(Likes).filter_by(post_liker=session['name'])).scalars()
+    l_like = [like.post_id for like in likes]
+    return render_template("test.html", session=session, all_post=all_post, users=users, likes=likes, l_like=l_like)
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

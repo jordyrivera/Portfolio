@@ -49,10 +49,10 @@
             </form>
                 </div>
                 <div>
-                    {%if post.id in l_like%}
-            <a href="{{ url_for('like_post', id= post.id) }}" class="like-post-btn"><img src="/static/hand-thumbs-up-fill.svg" alt="like"></a><b class="like-count">{{ post.likes }}</b>
-            {% else%}
-            <a href="{{ url_for('like_post', id= post.id) }}" class="like-post-btn"><img src="/static/hand-thumbs-up.svg" alt="like"></a><b class="like-count">{{ post.likes }}</b>
+                   {%if post.id in l_like%}
+                    <a class="like-post-btn" href="{{url_for('like_post', id = post.id)}}"><img src="/static/hand-thumbs-up-fill.svg" class="image"></a>
+            {% else %}
+                    <a class="like-post-btn" href="{{url_for('like_post', id = post.id)}}"><img src="/static/hand-thumbs-up.svg" class="image"></a>
             {% endif %}
             <a href="{{ url_for('view_comments', id = post.id)}}"> <img src="/static/chat-left-dots.svg" alt="view comments"></a>
             {% if post.owner_name == session.name %}
@@ -79,5 +79,9 @@
     });
   } );
   </script>
+    <script src="/static/likes.js">
+
+    </script>
+
 </html>
 

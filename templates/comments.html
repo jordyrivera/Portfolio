@@ -15,6 +15,7 @@
             <img src="/static/logo.png" class="post-img">
             @{{ post.owner_name }}
             <p class="post-content"> {{ post.post_content}}</p>
+            <p>likes {{post.likes}}</p>
         </div>
         {% for comment in comments%}
     <div class="comments">
