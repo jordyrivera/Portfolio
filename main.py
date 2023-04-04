@@ -1,9 +1,8 @@
 import werkzeug.security
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, request, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
-import re
-
+from Account import Account
 from flask_session import Session
 
 
@@ -72,29 +71,32 @@ def register():
 @app.route("/create_user", methods=["GET","POST"])
 def create_user():
     if request.method == "POST":
-        new_username = request.form["Username"]
-        dbuser = db.session.execute(db.select(User).filter_by(username=new_username)).scalar()
-        password = request.form["Password"]
-        email = request.form["Email"]
-        hash = werkzeug.security.generate_password_hash(password,method='pbkdf2:sha256', salt_length=8)
-        if request.form["Name"] == "" or request.form["LastName"] == "" or request.form["Username"] == "" or request.form["Email"] == "":
+        new_user = Account(request.form["Name"],
+                           request.form["LastName"],
+                           request.form["Username"],
+                           request.form["Password"],
+                           request.form["Email"])
+
+        dbuser = db.session.execute(db.select(User).filter_by(username=new_user.username)).scalar()
+
+        #validate user inputs
+        if new_user.validate_empty_inputs():
             return render_template("register.html", msg="All the fields are required, please fill all of them")
-        # validate email
-        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-        if (re.fullmatch(regex, email)):
-            pass
-        else:
+
+        if not new_user.validate_email():
             return render_template("register.html", msg="The email you have provided is not a valid email")
+
         try:
-            if new_username == dbuser.username:
+            if new_user.username == dbuser.username:
                 return render_template("register.html", msg="Username is already taken. Please use another username.")
+
         except AttributeError:
             user = User(
-                name= request.form["Name"],
-                lastName= request.form["LastName"],
-                username= new_username,
-                email=email,
-                password= hash
+                name=new_user.first_name,
+                lastName=new_user.last_name,
+                username=new_user.username,
+                email=new_user.email,
+                password=new_user.password_hash()
             )
             db.session.add(user)
             db.session.commit()
@@ -104,29 +106,27 @@ def create_user():
 @app.route("/", methods=["GET","POST"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        dbuser = db.session.execute(db.select(User).filter_by(username=username)).scalar()
-        dbpassword = db.session.execute(db.select(User).filter_by(username=username, password=password)).scalar()
+        query_account = db.session.execute(db.select(User).filter_by(username=request.form["username"])).scalar()
+        print(query_account)
         try:
-            if dbuser.username == username and werkzeug.security.check_password_hash(dbuser.password, password):
-                session['name'] = dbuser.username
+            if query_account.username == request.form["username"] and werkzeug.security.check_password_hash(query_account.password, request.form["password"]):
+                session['name'] = query_account.username
                 print(session["name"])
                 return redirect("/")
-        except AttributeError:
-            return render_template("index.html", msg="Wrong Username or Password")
+            else:
+                return render_template("index.html", msg="Wrong Username or Password")
+        except Exception:
+            return Exception
     return render_template("index.html")
 
 
-@app.route("/search", methods=["GET","POST"])
+@app.route("/search", methods=["GET", "POST"])
 def search():
     if request.method == "POST":
-        username = request.form["search"]
-        print(username)
         try:
-            search_user = db.session.execute(db.select(User).filter_by(username=username)).scalar()
-            all_post = db.session.execute(db.select(Post).filter_by(owner_name=username)).scalars()
-            if search_user.username == username:
+            search_user = db.session.execute(db.select(User).filter_by(username=request.form["search"])).scalar()
+            all_post = db.session.execute(db.select(Post).filter_by(owner_name=request.form["search"])).scalars()
+            if search_user.username == request.form["search"]:
                 return render_template("profile.html", user=search_user, all_post=all_post)
         except AttributeError:
             return redirect("/")
