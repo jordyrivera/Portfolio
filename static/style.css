@@ -1,18 +1,17 @@
 :root{
-    --dark-color:#2B2D42;
-    --bright-color:#EDF2F4;
-    --middle-color:#8D99AE;
-    --bright-red:#EF233C;
-    --dark-red:#D90429;
+    --dark-color:#623B5A;
+    --bright-color:#EDFFAB;
+    --middle-color:#BA9593;
+    --bright-red:#89608E;
+    --dark-red:#623B5A;
 }
 ::placeholder{
     color: var(--bright-color);
 }
 /** LOGIN AND REGISTER PAGE **/
 .bg1{
-    background: url(/static/bg.jpeg);
-    background-repeat: no-repeat;
-    background-size:cover;
+    background: rgb(165,171,203);
+    background: linear-gradient(90deg, rgba(165,171,203,1) 0%, rgba(127,22,185,1) 51%, rgba(100,0,255,1) 100%);
 }
 .main-container{
     width: 350px;
@@ -58,8 +57,10 @@
     border-radius:10px;
     padding:5px;
     font-size: 20px;
-    background: var(--middle-color);
+    background-color: rgb(255,255,255 , 0.1);
     box-shadow: inset 0 0 0 1px var(--bright-color);
+    color: var(--bright-color);
+
 }
 
 
@@ -72,8 +73,9 @@
     height: 60px;
     list-style-type: none;
     display: grid;
-    grid-template-columns: 200px 200px 600px 50px;
-    background: var(--middle-color);
+    grid-template-columns: 10% 5% 75% 10%;
+    background-color: rgb(255,255,255 , 0.1);
+
    }
 .menu-item{
     text-align: center;
@@ -97,29 +99,36 @@
     margin: 10px;
     left: 20%;
     width: 60%;
-    height: 600px;
+    height: 550px;
     background-color: var(--dark-color);
     position: relative;
     overflow-y:scroll;
     word-wrap:break-word;
+}
+.page-content::-webkit-scrollbar{
+    display: none;
 }
 
 .new-post{
     width:50%;
     position:relative;
     left: 25%;
-    background-color: var(--middle-color);
+    background-color: rgb(255,255,255 , 0.1);
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+
 
 }
 .post-btn{
-    background: var(--middle-color);
+
+    background-color: rgb(255,255,255 , 0.1);
     border: 1px solid var(--dark-color);
     border-radius:10px;
     color: var(--bright-color);
-    width:55px;
+    width:20%;
     padding:10px;
 }
 .post-btn:hover{
@@ -127,14 +136,16 @@
     color: var(--bright-color);
 }
 .new-input{
+    overflow-wrap: break-word;
     border: 1px solid var(--dark-color);
+    box-shadow: none;
     margin: 5px;
-    width:90%;
-    background-color: var(--middle-color);
-    color: var(--dark-color);
+    width:100%;
+    background-color: rgb(255,255,255 , 0.1);
+    color: var(--bright-color);
     border-radius:10px;
     padding:10px;
-    color: var(--bright-color);
+    height: 50px;
 }
 
 .post-container{
@@ -145,7 +156,8 @@
     margin: 10px;
     border-radius:10px;
     border: 1px solid var(--middle-color);
-    background: var(--middle-color);
+    background-color: rgb(255,255,255 , 0.1);
+
 }
 .post-img{
     border-radius:50%;
@@ -158,17 +170,20 @@
 .post-link:hover{
     color: var(--dark-red);
 }
+.post-owner{
+    color: var(--bright-color);
+}
 .post-content{
     padding:10px;
-    color: var(--bright-color);
+    color: white;
 }
 .post-options{
     border: 0.5px solid var(--bright-color);
     border-radius:10px;
     padding:5px;
-    display:grid;
-    grid-template-columns: 50% 50%;
+    display:flex;
     align-items: center;
+    text-align: center;
 }
 .delete-post{
    width:20px;
@@ -187,7 +202,7 @@
 
 .comment-post{
     padding:5px;
-    background: var(--middle-color);
+    background-color: rgb(255,255,255 , 0.1);
     color: var(--bright-color);
     border: none;
     border-radius: 10px;
@@ -205,7 +220,7 @@
 
 }
 .comments{
-    background: var(--middle-color);
+    background-color: rgb(255,255,255 , 0.1);
     border: 1px solid var(--dark-color);
     padding:10px;
     border-radius:10px;

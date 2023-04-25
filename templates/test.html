@@ -9,38 +9,28 @@
 </head>
 <body>
 
-<div class="page-content">
-        {% for post in all_post %}
-        <div class="post-container">
-            <img src="static/logo.png" class="post-img">
-            @{{ post.owner_name }}
-            <p class="post-content"> {{ post.post_content}}</p>
-            <div class="post-options">
-                <div style="align-items:center;">
-                    <form action="{{ url_for('add_comment')}}" method="post">
-            <input type="hidden"  name="post-id" value="{{post.id}}">
-            <input type="text" placeholder="comment here" name="comment" class="comment-post" autocomplete="off">
-            <input type="image" src="/static/plus-circle.svg" class="add-comment">
-            </form>
-                </div>
-                <div>
-            {%if post.id in l_like%}
-            <input type="text" value="true" class="clicked">
-            {% else %}
-            <input type="text" value="false" class="clicked">
-            {% endif %}
-            <button class="like-post-btn"><img src="" class="image"></button>
-            <a href="{{ url_for('view_comments', id = post.id)}}"> <img src="/static/chat-left-dots.svg" alt="view comments"></a>
-            {% if post.owner_name == session.name %}
-            <a href="{{ url_for('delete_post', id = post.id) }}"><img src="/static/trash-fill.svg" class="delete-post"></a>
-            {% endif %}
-                </div>
-
-            </div>
+<form method="POST" action="/upload" enctype="multipart/form-data">
+        <!-- File Upload-->
+        <div class="form-group">
+            <label for="inputFile">File input</label>
+            <input class="form-control-file" type="file" name="inputFile">
         </div>
 
-        {% endfor %}
-    </div>
+        <!-- Location -->
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input class="form-control" type="text" name="location">
+        </div>
+
+        <!-- Text -->
+        <div class="form-group">
+            <label for="text">Write Text</label>
+            <textarea class="form-control" name="text" id="text" rows="5" placeholder="Add a Description"></textarea>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 
 </body>
     <script src="static/test.js"></script>

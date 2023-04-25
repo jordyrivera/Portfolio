@@ -17,47 +17,64 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="/static/logo.png">
 </head>
+
 <body class="hp">
+    <!-- Menu bar -->
     <div class="menu-container">
     <div class="menu-item ">{{ session.name }}</div>
-    <div class="menu-item "><a href="{{ url_for('logout')}} " class="abtns"> Logout</a> </div>
-        <div class="menu-item">
+
+    <!--Logout button-->
+    <div class="menu-item ">
+        <a href="{{ url_for('logout')}} " class="abtns" style="color:black;"> Logout</a>
+    </div>
+    <!--...-->
+    <!--Search bar and button-->
+    <div class="menu-item">
         <form method="post" action="{{ url_for('search') }}">
-            <input type="text" name="search" placeholder="Search" class="w-90 search-input" autocomplete="off" id="user_search">
+            <input type="text" name="search" placeholder="Search" class="search-input"  autocomplete="off" id="user_search">
             <input type="image" src="static/search.svg">
         </form>
     </div>
     </div>
+    <!--...-->
+    <!--New post container-->
     <div class="new-post">
     <form method="post" action="{{ url_for('new_post') }}">
-        <input type="text" name="new_post" placeholder="New post here" class="new-input" autocomplete="off" autofocus>
+        <textarea name="new_post" placeholder="New post here" class="new-input" autocomplete="off" autofocus ></textarea>
         <input type="submit" value="Post" class="post-btn">
     </form>
     </div>
+    <!--...-->
+    <!--Page content-->
     <div class="page-content">
+        <!--Render all post in database-->
         {% for post in all_post %}
         <div class="post-container">
             <img src="static/logo.png" class="post-img">
-            @{{ post.owner_name }}
+            <span class="post-owner">@{{ post.owner_name }}</span>
             <p class="post-content"> {{ post.post_content}}</p>
             <div class="post-options">
                 <div style="align-items:center;">
+                    <!-- Render add comment input -->
                     <form action="{{ url_for('add_comment')}}" method="post">
             <input type="hidden"  name="post-id" value="{{post.id}}">
             <input type="text" placeholder="comment here" name="comment" class="comment-post" autocomplete="off">
-            <input type="image" src="/static/plus-circle.svg" class="add-comment">
+            <input type="image" src="/static/plus-circle.svg" class="add-comment" onclick="reset()">
             </form>
                 </div>
+                <!-- Render status of the like button based on condition-->
                 <div>
                    {%if post.id in l_like%}
                     <a class="like-post-btn" href="{{url_for('like_post', id = post.id)}}"><img src="/static/hand-thumbs-up-fill.svg" class="image"></a>
-            {% else %}
+                    {% else %}
                     <a class="like-post-btn" href="{{url_for('like_post', id = post.id)}}"><img src="/static/hand-thumbs-up.svg" class="image"></a>
-            {% endif %}
+                    {% endif %}
+                    <!-- Render comments button-->
             <a href="{{ url_for('view_comments', id = post.id)}}"> <img src="/static/chat-left-dots.svg" alt="view comments"></a>
-            {% if post.owner_name == session.name %}
-            <a href="{{ url_for('delete_post', id = post.id) }}"><img src="/static/trash-fill.svg" class="delete-post"></a>
-            {% endif %}
+                    <!-- Render delete button if session name is equals to post owner name-->
+                    {% if post.owner_name == session.name %}
+                    <a href="{{ url_for('delete_post', id = post.id) }}"><img src="/static/trash-fill.svg" class="delete-post"></a>
+                    {% endif %}
                 </div>
 
             </div>
@@ -67,6 +84,8 @@
     </div>
     </div>
 </body>
+
+
 <script>
   $( function() {
     var availableTags = [
@@ -78,10 +97,13 @@
       source: availableTags
     });
   } );
+
+  function reset(){
+  let input = document.querySelector(".comment-post")
+  input.textContent = ""
+  }
   </script>
-    <script src="/static/likes.js">
-
+<script src="/static/likes.js">
     </script>
-
 </html>
 
